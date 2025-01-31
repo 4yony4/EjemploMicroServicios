@@ -1,6 +1,14 @@
 version: "3.8"
 
 services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-service
+      - order-service
+
   user-service:
     build: ./user-service
     ports:
@@ -14,14 +22,6 @@ services:
       - "8082:8082"
     depends_on:
       - database
-
-  api-gateway:
-    build: ./api-gateway
-    ports:
-      - "8080:8080"
-    depends_on:
-      - user-service
-      - order-service
 
   database:
     image: postgres:15
