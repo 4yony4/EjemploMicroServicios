@@ -21,7 +21,7 @@ WORKDIR /app
 COPY --from=build /app/build/libs/*-SNAPSHOT.jar app.jar
 
 # Expose the correct port for each service
-EXPOSE 8081  # Change to 8081 or 8082 based on service
+EXPOSE 8081
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "/app.jar"]
