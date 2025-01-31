@@ -24,4 +24,4 @@ COPY --from=build /app/build/libs/*-SNAPSHOT.jar app.jar
 EXPOSE 8082
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
