@@ -1,27 +1,29 @@
-# Use a multi-stage build to reduce image size
+# Build Stage
 FROM gradle:8.6-jdk17 AS build
-
-# Set working directory inside the container
 WORKDIR /app
 
-# Copy Gradle build files first (to leverage Gradle's cache)
+# Copy build files and source code
 COPY build.gradle settings.gradle ./
 COPY src ./src
 
-# Build the application JAR
+# Build the application
 RUN gradle clean build --no-daemon
 
-# Use a minimal Java runtime image for the final container
-FROM openjdk:17-jdk-slim
+# DEBUG: Show contents of /app/build/libs/ after build
+RUN ls -l /app/build/libs/
 
-# Set working directory in the final image
+# Runtime Stage
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-# Find the JAR and rename it to app.jar
-COPY --from=build /app/build/libs/*-SNAPSHOT.jar app.jar
+# DEBUG: Show contents before copying JAR
+RUN ls -l /app/
 
-# Expose the correct port for each service
-EXPOSE 8081  # Change to 8081 or 8082 based on service
+# Copy only the JAR file
+COPY --from=build /app/build/libs/app.jar /app/app.jar
 
-# Command to run the application
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# DEBUG: Show contents of final container
+RUN ls -l /app/
+
+EXPOSE 8081
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
