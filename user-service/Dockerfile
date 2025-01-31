@@ -4,7 +4,7 @@ FROM gradle:8.6-jdk17 AS build
 # Set working directory inside the container
 WORKDIR /app
 
-# Copy Gradle build files and dependencies to leverage caching
+# Copy Gradle build files first (to leverage Gradle's cache)
 COPY build.gradle settings.gradle ./
 COPY src ./src
 
@@ -17,8 +17,8 @@ FROM openjdk:17-jdk-slim
 # Set working directory in the final image
 WORKDIR /app
 
-# Copy the JAR file from the build stage
-COPY --from=build /app/build/libs/*.jar app.jar
+# Copy only the main JAR file (adjust the name accordingly)
+COPY --from=build /app/build/libs/*-SNAPSHOT.jar app.jar
 
 # Expose the port (modify based on service)
 EXPOSE 8081
