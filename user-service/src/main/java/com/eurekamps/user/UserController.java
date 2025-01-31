@@ -10,4 +10,9 @@ public class UserController {
     public String getUser(@PathVariable String id) {
         return "User " + id;
     }
+
+    @GetMapping("/edad/{e}")
+    public String getEdad(@PathVariable int e) {
+        return "Edad " + (e*10);
+    }
 }
