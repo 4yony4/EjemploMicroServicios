@@ -1,4 +1,4 @@
-# Use official Gradle image to build the JAR
+# Use a multi-stage build to reduce image size
 FROM gradle:8.6-jdk17 AS build
 
 # Set working directory inside the container
@@ -17,11 +17,11 @@ FROM openjdk:17-jdk-slim
 # Set working directory in the final image
 WORKDIR /app
 
-# Copy only the main JAR file (adjust the name accordingly)
+# Find the JAR and rename it to app.jar
 COPY --from=build /app/build/libs/*-SNAPSHOT.jar app.jar
 
-# Expose the port (modify based on service)
-EXPOSE 8080
+# Expose the correct port for each service
+EXPOSE 8080  # Change to 8081 or 8082 based on service
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "/app.jar"]
